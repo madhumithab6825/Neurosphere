@@ -1,0 +1,24 @@
+# env
+.env
+*.env
+
+# python
+__pycache__/
+*.pyc
+*.pyo
+venv/
+.venv/
+*.egg-info/
+
+# uploads
+backend/uploads/
+backend/logs/
+
+# node
+node_modules/
+.next/
+frontend/.next/
+
+# misc
+.DS_Store
+*.log

@@ -38,11 +38,11 @@ export default function VoiceInput({ onResult }: { onResult: (text: string) => v
     <button
       onClick={listening ? stopListening : startListening}
       title={listening ? "Stop listening" : "Speak"}
-      className={`px-3 py-3 rounded-xl text-sm transition ${
+      className={`flex-shrink-0 w-10 h-10 rounded-xl text-sm transition border ${
         listening
-          ? "bg-red-600 hover:bg-red-700 animate-pulse"
-          : "bg-gray-700 hover:bg-gray-600"
-      } text-white`}
+          ? "bg-red-100 border-red-300 text-red-600 animate-pulse"
+          : "bg-[#faf7f5] hover:bg-[#f0e8ea] border-[#e0d5cf] text-[#7b1c2e]"
+      }`}
     >
       {listening ? "🔴" : "🎙️"}
     </button>

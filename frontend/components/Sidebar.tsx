@@ -41,10 +41,7 @@ export default function Sidebar({
   const [reminder, setReminder] = useState("");
 
   const loadFiles = async () => {
-    try {
-      const data = await getFiles();
-      setFiles(data);
-    } catch {}
+    try { const data = await getFiles(); setFiles(data); } catch {}
   };
 
   const loadWelcome = async () => {
@@ -54,67 +51,91 @@ export default function Sidebar({
     } catch {}
   };
 
-  useEffect(() => {
-    loadFiles();
-    loadWelcome();
-  }, [onRefresh]);
+  useEffect(() => { loadFiles(); loadWelcome(); }, [onRefresh]);
 
   return (
-    <div className="w-64 bg-gray-900 border-r border-gray-700 flex flex-col p-4 gap-4 overflow-y-auto">
-      <div>
-        <p className="text-white font-semibold text-lg">🧠 NeuroSphere</p>
-        <p className="text-gray-400 text-xs mt-1">Multi-Agent AI System</p>
-      </div>
+    <div className="w-64 h-full bg-white border-r border-[#e8ddd8] flex flex-col overflow-y-auto">
 
-      <button
-        onClick={onNewChat}
-        className="w-full bg-blue-600 hover:bg-blue-700 text-white text-sm py-2 px-4 rounded-xl transition flex items-center justify-center gap-2"
-      >
-        ✏️ New Chat
-      </button>
-
-      {reminder && (
-        <div className="bg-gray-800 rounded-xl p-3 text-xs text-gray-300 border border-gray-700">
-          <p className="text-yellow-400 font-medium mb-1">💡 Memory Reminder</p>
-          <p>{reminder}</p>
+      {/* logo */}
+      <div className="px-4 py-4 border-b border-[#e8ddd8]">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 bg-[#7b1c2e] rounded-lg flex items-center justify-center">
+            <span className="text-white text-sm font-bold">N</span>
+          </div>
+          <div>
+            <p className="text-[#2c1a1a] font-semibold text-sm">NeuroSphere</p>
+            <p className="text-[#8a6a6a] text-xs">Multi-Agent AI</p>
+          </div>
         </div>
-      )}
-
-      <div className="space-y-1 text-xs text-gray-400">
-        <p className="uppercase tracking-wide mb-2">Capabilities</p>
-        {[
-          ["📄 RAG",  "Ask from documents"],
-          ["🌐 Web",  "Paste any URL"],
-          ["🖼️ OCR",  "Read images"],
-          ["📊 Data", "Analyze CSV/Excel"],
-          ["💬 Chat", "General questions"],
-          ["🧠 ReAct","Think & plan steps"],
-        ].map(([icon, desc]) => (
-          <div key={icon} className="flex gap-2 items-center">
-            <span>{icon}</span>
-            <span className="text-gray-500">{desc}</span>
-          </div>
-        ))}
       </div>
 
-      <div className="flex-1 space-y-2 border-t border-gray-700 pt-3">
-        <p className="text-gray-400 text-xs uppercase tracking-wide">
-          Uploaded Files ({files.length})
-        </p>
-        {files.length === 0 && <p className="text-gray-600 text-xs">No files yet</p>}
-        {files.map((f, i) => (
-          <div key={i} className="bg-gray-800 rounded-xl p-3 text-xs text-gray-300 space-y-1">
-            <p className="font-medium text-white truncate">{fileIcon(f.filename)} {f.filename}</p>
-            <p className="text-gray-500">
-              {(f.file_size_bytes / 1024).toFixed(1)} KB
-              {f.chunks_stored ? ` · ${f.chunks_stored} chunks` : ""}
-            </p>
-            <p className="text-gray-600">{new Date(f.uploaded_at).toLocaleDateString()}</p>
+      <div className="flex-1 px-3 py-3 space-y-4 overflow-y-auto">
+
+        {/* new chat */}
+        <button
+          onClick={onNewChat}
+          className="w-full bg-[#7b1c2e] hover:bg-[#6a1726] text-white text-sm py-2 px-4 rounded-xl transition flex items-center justify-center gap-2"
+        >
+          + New Chat
+        </button>
+
+        {/* memory reminder */}
+        {reminder && (
+          <div className="bg-[#fdf6f0] rounded-xl p-3 text-xs text-[#5a3a3a] border border-[#e8ddd8]">
+            <p className="text-[#7b1c2e] font-medium mb-1">Memory</p>
+            <p className="text-[#8a6a6a]">{reminder}</p>
           </div>
-        ))}
+        )}
+
+        {/* capabilities */}
+        <div>
+          <p className="text-xs font-medium text-[#8a6a6a] uppercase tracking-wide mb-2">Capabilities</p>
+          <div className="space-y-1">
+            {[
+              ["📄", "RAG", "Ask from documents"],
+              ["🌐", "Web", "Paste any URL"],
+              ["🖼️", "OCR", "Read images"],
+              ["📊", "Data", "Analyze CSV/Excel"],
+              ["💬", "Chat", "General questions"],
+              ["🧠", "ReAct", "Think & plan"],
+            ].map(([icon, label, desc]) => (
+              <div key={label} className="flex items-center gap-2 px-2 py-1.5 rounded-lg hover:bg-[#f5f0eb] transition">
+                <span className="text-sm">{icon}</span>
+                <div>
+                  <p className="text-xs font-medium text-[#2c1a1a]">{label}</p>
+                  <p className="text-xs text-[#8a6a6a]">{desc}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* uploaded files */}
+        <div>
+          <p className="text-xs font-medium text-[#8a6a6a] uppercase tracking-wide mb-2">
+            Files ({files.length})
+          </p>
+          {files.length === 0 && (
+            <p className="text-xs text-[#b0a0a0] px-2">No files uploaded yet</p>
+          )}
+          <div className="space-y-1">
+            {files.map((f, i) => (
+              <div key={i} className="bg-[#faf7f5] border border-[#e8ddd8] rounded-xl p-2.5 text-xs">
+                <p className="font-medium text-[#2c1a1a] truncate">{fileIcon(f.filename)} {f.filename}</p>
+                <p className="text-[#8a6a6a] mt-0.5">
+                  {(f.file_size_bytes / 1024).toFixed(1)} KB
+                  {f.chunks_stored ? ` · ${f.chunks_stored} chunks` : ""}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
 
-      <PreferencePanel onStyleChange={onStyleChange} onTtsChange={onTtsChange} />
+      {/* preferences */}
+      <div className="px-3 py-3 border-t border-[#e8ddd8]">
+        <PreferencePanel onStyleChange={onStyleChange} onTtsChange={onTtsChange} />
+      </div>
     </div>
   );
 }

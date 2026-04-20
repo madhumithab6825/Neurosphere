@@ -42,17 +42,17 @@ export default function ChatInput({
   };
 
   return (
-    <div className="p-4 border-t border-gray-700 space-y-2">
+    <div className="bg-white border-t border-[#e8ddd8] px-4 py-3 space-y-2">
       {attachedFile && (
-        <div className="flex items-center gap-2 bg-gray-800 px-3 py-2 rounded-xl text-xs text-gray-300">
+        <div className="flex items-center gap-2 bg-[#faf7f5] border border-[#e0d5cf] px-3 py-2 rounded-xl text-xs text-[#5a3a3a]">
           <span>📎 {attachedFile.name}</span>
-          <button onClick={() => setAttachedFile(null)} className="ml-auto text-gray-500 hover:text-red-400">✕</button>
+          <button onClick={() => setAttachedFile(null)} className="ml-auto text-[#8a6a6a] hover:text-red-500">✕</button>
         </div>
       )}
-      <div className="flex gap-2">
+      <div className="flex gap-2 items-center">
         <button
           onClick={() => fileRef.current?.click()}
-          className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-3 rounded-xl text-sm transition"
+          className="flex-shrink-0 w-10 h-10 bg-[#faf7f5] hover:bg-[#f0e8ea] border border-[#e0d5cf] text-[#7b1c2e] rounded-xl flex items-center justify-center transition"
           title="Attach file"
         >
           📎
@@ -66,7 +66,7 @@ export default function ChatInput({
         />
         <VoiceInput onResult={(text) => setInput(text)} />
         <input
-          className="flex-1 bg-gray-800 text-white rounded-xl px-4 py-3 text-sm outline-none focus:ring-2 focus:ring-blue-500"
+          className="flex-1 bg-[#faf7f5] text-[#2c1a1a] border border-[#e0d5cf] rounded-xl px-4 py-2.5 text-sm outline-none focus:border-[#7b1c2e] focus:ring-1 focus:ring-[#7b1c2e] transition placeholder-[#b0a0a0]"
           placeholder="Ask anything, paste a URL, or attach a file..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
@@ -76,7 +76,7 @@ export default function ChatInput({
         <button
           onClick={handleSend}
           disabled={loading}
-          className="bg-blue-600 hover:bg-blue-700 disabled:opacity-50 text-white px-5 py-3 rounded-xl text-sm font-medium transition"
+          className="flex-shrink-0 bg-[#7b1c2e] hover:bg-[#6a1726] disabled:opacity-50 text-white px-4 py-2.5 rounded-xl text-sm font-medium transition"
         >
           {loading ? "..." : "Send"}
         </button>

@@ -13,7 +13,7 @@ const STYLES = [
   { value: "default",   label: "Default",   icon: "💬" },
   { value: "brief",     label: "Brief",     icon: "⚡" },
   { value: "bullets",   label: "Bullets",   icon: "•" },
-  { value: "paragraph", label: "Paragraph", icon: "📝" },
+  { value: "paragraph", label: "Para",      icon: "📝" },
   { value: "detailed",  label: "Detailed",  icon: "📖" },
 ];
 
@@ -59,17 +59,17 @@ export default function PreferencePanel({
   };
 
   return (
-    <div className="border-t border-gray-700 pt-3 space-y-3">
-      <p className="text-gray-400 text-xs uppercase tracking-wide">Response Style</p>
+    <div className="space-y-3">
+      <p className="text-xs font-medium text-[#8a6a6a] uppercase tracking-wide">Response Style</p>
       <div className="flex flex-wrap gap-1">
         {STYLES.map((s) => (
           <button
             key={s.value}
             onClick={() => handleStyle(s.value)}
-            className={`text-xs px-2 py-1 rounded-lg transition ${
+            className={`text-xs px-2.5 py-1 rounded-lg transition border ${
               style === s.value
-                ? "bg-blue-600 text-white"
-                : "bg-gray-800 text-gray-400 hover:bg-gray-700"
+                ? "bg-[#7b1c2e] text-white border-[#7b1c2e]"
+                : "bg-[#faf7f5] text-[#5a3a3a] border-[#e0d5cf] hover:border-[#7b1c2e]"
             }`}
           >
             {s.icon} {s.label}
@@ -78,16 +78,16 @@ export default function PreferencePanel({
       </div>
 
       <div className="flex items-center justify-between">
-        <p className="text-gray-400 text-xs">🔊 Voice Response</p>
+        <p className="text-xs text-[#5a3a3a]">Voice Response</p>
         <button
           onClick={() => handleTts(!tts)}
-          className={`w-10 h-5 rounded-full transition-colors ${tts ? "bg-blue-600" : "bg-gray-700"}`}
+          className={`w-10 h-5 rounded-full transition-colors relative ${tts ? "bg-[#7b1c2e]" : "bg-[#e0d5cf]"}`}
         >
-          <div className={`w-4 h-4 bg-white rounded-full mx-0.5 transition-transform ${tts ? "translate-x-5" : ""}`} />
+          <div className={`absolute top-0.5 w-4 h-4 bg-white rounded-full shadow transition-transform ${tts ? "translate-x-5" : "translate-x-0.5"}`} />
         </button>
       </div>
 
-      {saved && <p className="text-green-400 text-xs">✓ Saved</p>}
+      {saved && <p className="text-xs text-[#7b1c2e]">✓ Saved</p>}
     </div>
   );
 }

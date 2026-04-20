@@ -19,7 +19,8 @@ app.add_middleware(
     CORSMiddleware,
     allow_origins=[
         "http://localhost:3000",
-        "https://neurosphere.vercel.app"
+        "https://neurosphere.vercel.app",
+        "https://neurosphere-5o68-8qq9rolvp-madhumithab6825s-projects.vercel.app"
     ],
     allow_methods=["*"],
     allow_headers=["*"],

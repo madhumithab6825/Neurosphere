@@ -17,7 +17,10 @@ app = FastAPI(title="NeuroSphere Multi-Agent API")
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],
+    allow_origins=[
+        "http://localhost:3000",
+        "https://neurosphere.vercel.app"
+    ],
     allow_methods=["*"],
     allow_headers=["*"],
 )

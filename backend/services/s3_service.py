@@ -1,34 +1,45 @@
 import os
-import boto3
 import logging
+import cloudinary
+import cloudinary.uploader
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=os.path.join(os.path.dirname(os.path.abspath(__file__)), '..', '..', '.env'))
 
-logger = logging.getLogger("s3_service")
+logger = logging.getLogger("cloudinary_service")
 
-s3 = boto3.client(
-    "s3",
-    aws_access_key_id=os.getenv("AWS_ACCESS_KEY_ID"),
-    aws_secret_access_key=os.getenv("AWS_SECRET_ACCESS_KEY"),
-    region_name=os.getenv("AWS_REGION", "us-east-1")
+cloudinary.config(
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET")
 )
 
-BUCKET = os.getenv("S3_BUCKET_NAME")
-
 def upload_to_s3(file_path: str, user_id: str, filename: str) -> str:
-    key = f"{user_id}/{filename}"
-    s3.upload_file(file_path, BUCKET, key)
-    url = f"https://{BUCKET}.s3.amazonaws.com/{key}"
-    logger.info(f"Uploaded to S3: {key}")
-    return url
-
-def download_from_s3(user_id: str, filename: str, dest_path: str):
-    key = f"{user_id}/{filename}"
-    s3.download_file(BUCKET, key, dest_path)
-    logger.info(f"Downloaded from S3: {key}")
+    """Upload file to Cloudinary — drop-in replacement for S3"""
+    try:
+        public_id = f"neurosphere/{user_id}/{filename}"
+        result = cloudinary.uploader.upload(
+            file_path,
+            public_id=public_id,
+            resource_type="raw",
+            overwrite=True
+        )
+        url = result.get("secure_url", "")
+        logger.info(f"Uploaded to Cloudinary: {public_id}")
+        return url
+    except Exception as e:
+        logger.error(f"Cloudinary upload failed: {e}")
+        return ""
 
 def list_user_files(user_id: str) -> list:
-    response = s3.list_objects_v2(Bucket=BUCKET, Prefix=f"{user_id}/")
-    files = [obj["Key"].split("/")[-1] for obj in response.get("Contents", [])]
-    return files
+    try:
+        from cloudinary import api
+        result = api.resources(
+            type="upload",
+            prefix=f"neurosphere/{user_id}/",
+            resource_type="raw"
+        )
+        return [r["public_id"].split("/")[-1] for r in result.get("resources", [])]
+    except Exception as e:
+        logger.error(f"Cloudinary list failed: {e}")
+        return []

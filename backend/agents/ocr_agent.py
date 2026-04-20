@@ -1,29 +1,18 @@
 import logging
-import easyocr
+from PIL import Image
 from services.llm_service import get_ai_response
 
 logger = logging.getLogger("ocr_agent")
 
-reader = None
-
-def get_reader():
-    global reader
-    if reader is None:
-        logger.info("Loading EasyOCR model...")
-        reader = easyocr.Reader(["en"], gpu=False)
-    return reader
-
-
 def extract_text(image_path: str) -> str:
     try:
-        results = get_reader().readtext(image_path, detail=0)
-        text = " ".join(results)
+        import pytesseract
+        text = pytesseract.image_to_string(Image.open(image_path))
         logger.info(f"OCR extracted {len(text)} chars from {image_path}")
-        return text
+        return text.strip()
     except Exception as e:
         logger.error(f"OCR failed: {e}")
         return ""
-
 
 def run(image_path: str, query: str = "") -> dict:
     logger.info(f"OCR agent running for: {image_path}")

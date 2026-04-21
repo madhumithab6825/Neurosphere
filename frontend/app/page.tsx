@@ -29,7 +29,7 @@ export default function Home() {
   useEffect(() => {
     const token = localStorage.getItem("token");
     const userData = localStorage.getItem("user");
-    if (!token) { router.push("/login"); return; }
+    if (!token) { router.push("/welcome"); return; }
     if (userData) setUser(JSON.parse(userData));
   }, []);
 

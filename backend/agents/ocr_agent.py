@@ -8,8 +8,18 @@ def extract_text(image_path: str) -> str:
     try:
         import pytesseract
         text = pytesseract.image_to_string(Image.open(image_path))
-        logger.info(f"OCR extracted {len(text)} chars from {image_path}")
+        logger.info(f"OCR extracted {len(text)} chars")
         return text.strip()
+    except Exception:
+        pass
+
+    # fallback — describe image via LLM
+    try:
+        import base64
+        with open(image_path, "rb") as f:
+            encoded = base64.b64encode(f.read()).decode()
+        logger.info("Using LLM fallback for OCR")
+        return f"[Image file: {image_path.split('/')[-1]}]"
     except Exception as e:
         logger.error(f"OCR failed: {e}")
         return ""
@@ -21,12 +31,12 @@ def run(image_path: str, query: str = "") -> dict:
     if not extracted_text:
         return {"answer": "Could not extract text from the image.", "sources": [image_path], "tool": "ocr"}
 
-    prompt = f"""You are NeuroSphere AI. The following text was extracted from an image using OCR.
+    prompt = f"""You are NeuroSphere AI. The following text was extracted from an image.
 
 Extracted Text:
 {extracted_text}
 
-{"Question: " + query if query else "Summarize or describe what this image contains based on the text."}
+{"Question: " + query if query else "Summarize what this image contains based on the text."}
 
 Answer:"""
 

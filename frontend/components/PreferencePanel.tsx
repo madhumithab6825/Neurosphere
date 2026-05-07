@@ -4,8 +4,10 @@ import axios from "axios";
 
 const API = axios.create({ baseURL: process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000" });
 API.interceptors.request.use((c) => {
-  const t = localStorage.getItem("token");
-  if (t) c.headers.Authorization = `Bearer ${t}`;
+  if (typeof window !== "undefined") {
+    const t = localStorage.getItem("token");
+    if (t) c.headers.Authorization = `Bearer ${t}`;
+  }
   return c;
 });
 

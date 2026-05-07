@@ -26,25 +26,34 @@ export const sendMessage = async (message: string) => {
 };
 
 export const uploadDoc = async (file: File) => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const form = new FormData();
   form.append("file", file);
-  const res = await API.post("/upload", form);
+  const res = await API.post("/upload", form, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {}
+  });
   return res.data;
 };
 
 export const uploadImage = async (file: File, query: string) => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const form = new FormData();
   form.append("file", file);
   form.append("query", query);
-  const res = await API.post("/ocr", form);
+  const res = await API.post("/ocr", form, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {}
+  });
   return res.data;
 };
 
 export const uploadData = async (file: File, query: string) => {
+  const token = typeof window !== "undefined" ? localStorage.getItem("token") : null;
   const form = new FormData();
   form.append("file", file);
   form.append("query", query);
-  const res = await API.post("/analyze", form);
+  const res = await API.post("/analyze", form, {
+    headers: token ? { Authorization: `Bearer ${token}` } : {}
+  });
   return res.data;
 };
 

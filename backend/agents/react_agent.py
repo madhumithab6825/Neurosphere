@@ -7,7 +7,7 @@ from agents.ocr_agent import run as ocr_run
 
 logger = logging.getLogger("react_agent")
 
-MAX_ITERATIONS = 4
+MAX_ITERATIONS = 2
 
 TOOLS = {
     "rag":  "Search uploaded documents for relevant information",

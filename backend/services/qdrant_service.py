@@ -8,15 +8,26 @@ logger = logging.getLogger("qdrant_service")
 VECTOR_SIZE = 384
 
 def create_collection():
-    existing = [c.name for c in client.get_collections().collections]
-    if COLLECTION_NAME in existing:
-        client.delete_collection(COLLECTION_NAME)
-        logger.info(f"Deleted existing collection: {COLLECTION_NAME}")
-    client.create_collection(
-        collection_name=COLLECTION_NAME,
-        vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
-    )
-    logger.info(f"Created Qdrant collection: {COLLECTION_NAME}")
+    try:
+        existing = [c.name for c in client.get_collections().collections]
+        if COLLECTION_NAME not in existing:
+            client.create_collection(
+                collection_name=COLLECTION_NAME,
+                vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
+            )
+            logger.info(f"Created Qdrant collection: {COLLECTION_NAME}")
+        else:
+            logger.info(f"Collection already exists: {COLLECTION_NAME}")
+    except Exception as e:
+        logger.warning(f"Collection check failed, attempting to create: {e}")
+        try:
+            client.create_collection(
+                collection_name=COLLECTION_NAME,
+                vectors_config=VectorParams(size=VECTOR_SIZE, distance=Distance.COSINE)
+            )
+            logger.info(f"Created Qdrant collection: {COLLECTION_NAME}")
+        except Exception as e2:
+            logger.error(f"Failed to create collection: {e2}")
 
 def upsert_chunks(chunks: list, vectors: list):
     points = [
